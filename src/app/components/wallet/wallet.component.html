@@ -1,8 +1,21 @@
 <div class="wallet-card">
   <h2>Carteira</h2>
 
-  @if (!wallet()) {
-    <p class="hint">Crie uma carteira ou carregue com sua chave privada.</p>
+  @if (viewMode() === 'list') {
+    <p class="hint">Selecione uma carteira ou crie/carregue uma nova.</p>
+
+    @if (wallets().length > 0) {
+      <ul class="wallet-list">
+        @for (w of wallets(); track w.publicKey; let i = $index) {
+          <li class="wallet-item">
+            <span class="wallet-address">{{ w.publicKey.slice(0, 16) }}...</span>
+            <span class="wallet-balance">Saldo: {{ getBalanceForAddress(w.publicKey) }}</span>
+            <button type="button" class="btn-select" (click)="selectWallet(i)">Selecionar</button>
+          </li>
+        }
+      </ul>
+    }
+
     <div class="actions">
       <button type="button" (click)="createWallet()">Nova carteira</button>
       <div class="load-wallet">
@@ -16,20 +29,24 @@
       </div>
     </div>
   } @else {
-    <div class="balance">
-      <span class="label">Saldo:</span>
-      <span class="value">{{ balance() }}</span>
-    </div>
-    <div class="address">
-      <span class="label">Endereço (público):</span>
-      <code>{{ wallet()!.publicKey.slice(0, 20) }}...</code>
-    </div>
-    <div class="send-form">
-      <h3>Enviar</h3>
-      <input type="text" placeholder="Endereço destino" [(ngModel)]="toAddress" />
-      <input type="number" placeholder="Valor" [(ngModel)]="amount" min="0" step="1" />
-      <button type="button" (click)="send()">Enviar</button>
-    </div>
+    <button type="button" class="btn-back" (click)="backToList()">← Voltar à lista</button>
+
+    @if (wallet()) {
+      <div class="balance">
+        <span class="label">Saldo:</span>
+        <span class="value">{{ balance() }}</span>
+      </div>
+      <div class="address">
+        <span class="label">Endereço (público):</span>
+        <code>{{ wallet()!.publicKey.slice(0, 20) }}...</code>
+      </div>
+      <div class="send-form">
+        <h3>Enviar</h3>
+        <input type="text" placeholder="Endereço destino" [(ngModel)]="toAddress" />
+        <input type="number" placeholder="Valor" [(ngModel)]="amount" min="0" step="1" />
+        <button type="button" (click)="send()">Enviar</button>
+      </div>
+    }
   }
 
   @if (error()) {

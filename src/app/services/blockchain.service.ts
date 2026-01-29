@@ -11,10 +11,18 @@ export interface Wallet {
   privateKey: string;
 }
 
+/** Key pair from generateKeyPair or loaded via keyFromPrivate (signing only, no getPrivate). */
+type WalletKeyPair = {
+  keyPair: { getPublic: (enc: string) => string; sign: (hash: string, enc: string) => { toDER: (enc: string) => string } };
+  publicKey: string;
+  privateKey: string;
+};
+
 @Injectable({ providedIn: 'root' })
 export class BlockchainService {
   private blockchain = new Blockchain();
-  private keyPair = signal<ReturnType<typeof generateKeyPair> | null>(null);
+  private keyPair = signal<WalletKeyPair | null>(null);
+  readonly wallets = signal<Wallet[]>([]);
 
   readonly wallet = computed(() => {
     const kp = this.keyPair();
@@ -32,21 +40,45 @@ export class BlockchainService {
   readonly pendingTransactions = signal([...this.blockchain.pendingTransactions]);
   readonly isValid = signal(this.blockchain.isChainValid());
 
+  getBalanceForAddress(address: string): number {
+    return this.blockchain.getAddressBalance(address);
+  }
+
+  private addWalletToStore(w: Wallet): void {
+    const list = this.wallets();
+    if (list.some((x) => x.publicKey === w.publicKey)) return;
+    this.wallets.set([...list, w]);
+  }
+
   createWallet(): void {
-    this.keyPair.set(generateKeyPair());
+    const kp = generateKeyPair();
+    this.keyPair.set(kp);
+    this.addWalletToStore({ publicKey: kp.publicKey, privateKey: kp.privateKey });
   }
 
   loadWallet(privateKeyHex: string): void {
     try {
       const kp = keyFromPrivate(privateKeyHex);
-      this.keyPair.set({
-        keyPair: kp,
+      const w: Wallet = {
         publicKey: kp.getPublic('hex'),
         privateKey: privateKeyHex,
+      };
+      this.keyPair.set({
+        keyPair: kp,
+        publicKey: w.publicKey,
+        privateKey: w.privateKey,
       });
+      this.addWalletToStore(w);
     } catch {
       throw new Error('Chave privada inválida');
     }
+  }
+
+  selectWallet(index: number): void {
+    const list = this.wallets();
+    const w = list[index];
+    if (!w) return;
+    this.loadWallet(w.privateKey);
   }
 
   sendTransaction(toAddress: string, amount: number): void {

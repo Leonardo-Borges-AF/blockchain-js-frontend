@@ -1,3 +1,33 @@
+declare module 'elliptic' {
+  interface KeyPair {
+    getPublic(enc: string): string;
+    getPrivate(enc: string): string;
+    sign(hash: string, enc: string): { toDER(enc: string): string };
+  }
+  interface EC {
+    new (curve: string): EC;
+    genKeyPair(): KeyPair;
+    keyFromPrivate(hex: string): KeyPair;
+  }
+  const elliptic: { ec: EC };
+  export default elliptic;
+}
+
+declare module 'blockchain-src' {
+  export class Transaction {
+    constructor(fromAddress: string | null, toAddress: string, amount: number);
+    signTransaction(signingKey: { getPublic: (enc: string) => string; sign: (hash: string, enc: string) => { toDER: (enc: string) => string } }): void;
+  }
+  export class Blockchain {
+    chain: unknown[];
+    pendingTransactions: unknown[];
+    getAddressBalance(address: string): number;
+    minePendingTransactions(miningRewardAddress: string): void;
+    addTransaction(transaction: Transaction): void;
+    isChainValid(): boolean;
+  }
+}
+
 declare module 'blockchain' {
   export class Transaction {
     constructor(fromAddress: string | null, toAddress: string, amount: number);

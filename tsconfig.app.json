@@ -4,7 +4,12 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    "types": [],
+    "baseUrl": "./",
+    "paths": {
+      "blockchain": ["./src/app/lib/blockchain.ts"],
+      "blockchain-src": ["./node_modules/blockchain/src/blockchain.js"]
+    }
   },
   "include": [
     "src/**/*.ts",

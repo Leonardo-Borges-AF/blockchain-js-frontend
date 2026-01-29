@@ -23,13 +23,13 @@
   "private": true,
   "packageManager": "npm@11.8.0",
   "dependencies": {
-    "blockchain": "github:Leonardo-Borges-AF/blockchain-js",
     "@angular/common": "^21.1.0",
     "@angular/compiler": "^21.1.0",
     "@angular/core": "^21.1.0",
     "@angular/forms": "^21.1.0",
     "@angular/platform-browser": "^21.1.0",
     "@angular/router": "^21.1.0",
+    "blockchain": "github:Leonardo-Borges-AF/blockchain-js",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
