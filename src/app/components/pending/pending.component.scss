@@ -1,0 +1,59 @@
+.pending-card {
+  background: #1a1d24;
+  border-radius: 12px;
+  padding: 1.5rem;
+  max-width: 360px;
+
+  h2 {
+    margin: 0 0 1rem;
+    font-size: 1.25rem;
+    color: #e4e6eb;
+  }
+
+  .list {
+    margin-bottom: 1rem;
+    max-height: 200px;
+    overflow-y: auto;
+
+    .empty {
+      color: #8b8f97;
+      font-size: 0.9rem;
+    }
+
+    .tx {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid #2d3239;
+
+      .reward {
+        color: #f59e0b;
+      }
+      strong {
+        color: #e4e6eb;
+      }
+    }
+  }
+
+  .mine-btn {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: none;
+    background: #22c55e;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+      background: #16a34a;
+    }
+  }
+
+  .hint {
+    color: #8b8f97;
+    font-size: 0.85rem;
+  }
+}

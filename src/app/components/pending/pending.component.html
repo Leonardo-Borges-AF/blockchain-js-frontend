@@ -1,0 +1,24 @@
+<div class="pending-card">
+  <h2>Transações pendentes</h2>
+  <div class="list">
+    @if (pendingTransactions().length === 0) {
+      <p class="empty">Nenhuma transação pendente.</p>
+    } @else {
+      @for (tx of pendingTransactions(); track $index) {
+        <div class="tx">
+          @if (tx.fromAddress) {
+            <span>{{ tx.fromAddress.slice(0, 10) }}... → {{ tx.toAddress.slice(0, 10) }}...</span>
+          } @else {
+            <span class="reward">Recompensa → {{ tx.toAddress.slice(0, 10) }}...</span>
+          }
+          <strong>{{ tx.amount }}</strong>
+        </div>
+      }
+    }
+  </div>
+  @if (wallet()) {
+    <button type="button" class="mine-btn" (click)="mine()">Minerar bloco</button>
+  } @else {
+    <p class="hint">Carregue uma carteira para minerar.</p>
+  }
+</div>

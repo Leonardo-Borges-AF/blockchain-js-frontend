@@ -1,0 +1,28 @@
+<div class="chain-card">
+  <h2>Blocos</h2>
+  <p class="validity" [class.invalid]="!isValid()">
+    {{ isValid() ? 'Cadeia válida' : 'Cadeia inválida' }}
+  </p>
+  <div class="blocks">
+    @for (block of chain(); track block.hash) {
+      <div class="block">
+        <div class="block-header">
+          <span class="index">#{{ block.index }}</span>
+          <code class="hash">{{ block.hash.slice(0, 16) }}...</code>
+        </div>
+        <div class="block-body">
+          @for (tx of block.transactions; track $index) {
+            <div class="tx">
+              @if (tx.fromAddress) {
+                <span>{{ tx.fromAddress.slice(0, 10) }}... → {{ tx.toAddress.slice(0, 10) }}...</span>
+              } @else {
+                <span class="reward">Recompensa mineração → {{ tx.toAddress.slice(0, 10) }}...</span>
+              }
+              <strong>{{ tx.amount }}</strong>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

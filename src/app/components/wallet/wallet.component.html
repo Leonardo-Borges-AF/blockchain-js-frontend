@@ -1,0 +1,41 @@
+<div class="wallet-card">
+  <h2>Carteira</h2>
+
+  @if (!wallet()) {
+    <p class="hint">Crie uma carteira ou carregue com sua chave privada.</p>
+    <div class="actions">
+      <button type="button" (click)="createWallet()">Nova carteira</button>
+      <div class="load-wallet">
+        <input
+          type="text"
+          placeholder="Chave privada (hex)"
+          [(ngModel)]="privateKeyInput"
+          (keyup.enter)="loadWallet()"
+        />
+        <button type="button" (click)="loadWallet()">Carregar</button>
+      </div>
+    </div>
+  } @else {
+    <div class="balance">
+      <span class="label">Saldo:</span>
+      <span class="value">{{ balance() }}</span>
+    </div>
+    <div class="address">
+      <span class="label">Endereço (público):</span>
+      <code>{{ wallet()!.publicKey.slice(0, 20) }}...</code>
+    </div>
+    <div class="send-form">
+      <h3>Enviar</h3>
+      <input type="text" placeholder="Endereço destino" [(ngModel)]="toAddress" />
+      <input type="number" placeholder="Valor" [(ngModel)]="amount" min="0" step="1" />
+      <button type="button" (click)="send()">Enviar</button>
+    </div>
+  }
+
+  @if (error()) {
+    <p class="message error">{{ error() }}</p>
+  }
+  @if (success()) {
+    <p class="message success">{{ success() }}</p>
+  }
+</div>
